@@ -17,7 +17,7 @@
   </Form>
 </template>
 <script>
-    import https from '@/http.js'
+    import http from '@/http.js'
     export default {
         data () {
             return {
@@ -40,13 +40,13 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        console.info('参数信息：', this.formInline);
-                        let params = {'account': this.formInline.account, 'password': this.formInline.password};
-                        https.fetchGet('/user/login', params).then(res => {
-
-                            console.info('后台返回的数据：', res.data);
-                        }).catch(err => {
-                            console.info('报错信息：', err.response.message);
+                        let param = {'account': this.formInline.account, 'password': this.formInline.password};
+                        http.fetchGet("http://127.0.0.1:8081/user/login", param).then(response => {
+                            if(response.data.response === 'Success') {
+                                this.$router.push({path: '/welcome'})
+                            } else {
+                                alert('Error!');
+                            }
                         })
                     } else {
                         this.$Message.error('表单校验失败');
